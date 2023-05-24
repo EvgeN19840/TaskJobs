@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, NavLink } from "react-router-dom";
-import avatar from "../picturs/avatar.jpg"
+import avatar from "../picturs/avatar.jpg";
+import { routecontact as routecontactPage } from "../pages/contactPage";
+import { routelistPosts as routelistPostsPage } from "../pages/listpostsPage";
 
 import "./styles.css";
 
@@ -18,24 +20,23 @@ const Header = () => {
   }, [isActive]);
 
   return (
-    <Router>
-      <header className="main-header">
-        <div className="menu-header">
-       
-          <nav className={`navbar-link body ${isActive ? "active" : ""}`}>
+    <header className="main-header">
+      <div className="menu-header">
+        <nav className={`navbar-link body ${isActive ? "active" : ""}`}>
           {isInfoVisible && (
             <div className="user-info">
               <img src={avatar} alt="Avatar" />
               <div>
                 <p>Евгений</p>
-                <p>example@mail.com</p>
+                <p>example@gmail.com</p>
               </div>
             </div>
           )}
+          <div className="nav-container">
             <ul className="navbar-link">
               <NavLink
                 className="navbar-link-button"
-                to="/posts"
+                to={routelistPostsPage()}
                 activeClassName={"linkActive"}
                 onClick={toggleActive}
               >
@@ -44,23 +45,23 @@ const Header = () => {
 
               <NavLink
                 className="navbar-link-button"
-                to="/about"
+                to={routecontactPage()}
                 activeClassName={"linkActive"}
                 onClick={toggleActive}
               >
                 Обо мне
               </NavLink>
             </ul>
-          </nav>
-          <div
-            className={`header-burger body ${isActive ? "active" : ""}`}
-            onClick={toggleActive}
-          >
-            <span></span>
           </div>
+        </nav>
+        <div
+          className={`header-burger body ${isActive ? "active" : ""}`}
+          onClick={toggleActive}
+        >
+          <span></span>
         </div>
-      </header>
-    </Router>
+      </div>
+    </header>
   );
 };
 
