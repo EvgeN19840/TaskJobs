@@ -4,36 +4,52 @@ import {
   FETCH_USERS_REQUEST,
   fetchUsersSuccess,
   fetchUsersFailure,
-
-} from
- '../../redux/actions';
+  FETCH_COMMENTS_REQUEST,
+  fetchCommentsSuccess,
+  fetchCommentsFailure,
+} from '../../redux/actions';
 
 interface User {
   id: number;
   name: string;
+}
 
+interface Comment {
+  id: number;
+  postId: number;
+  body: string;
 }
 
 interface PartialFetchUsersResponse extends AxiosResponse {
   data: Partial<User>[];
 }
 
-function* fetchUsersSaga(): Generator {
-  try {
-    const response: unknown = yield call(
-      axios.get,
-      'https://jsonplaceholder.typicode.com/comments'
-    );
-    console.log('Response:', response); // Log the response
-    const typedResponse = response as PartialFetchUsersResponse;
-    yield put(fetchUsersSuccess(typedResponse.data as User[]));
-  } catch (error: any) {
-    yield put(fetchUsersFailure(error.message));
-  }
+interface FetchCommentsResponse extends AxiosResponse {
+  data: Comment[];
 }
 
+
+
+function* fetchCommentsSaga(action: { type: string; payload: number }): Generator {
+    try {
+      const postId = action.payload;
+      const response: unknown = yield call(
+        axios.get,
+        `https://jsonplaceholder.typicode.com/comments?postId=${postId}`
+      );
+      
+      const typedResponse = response as FetchCommentsResponse;
+      
+      yield put(fetchCommentsSuccess(typedResponse.data));
+    } catch (error: any) {
+      yield put(fetchCommentsFailure(error.message));
+    }
+  }
+  
+
 function* rootSaga(): Generator {
-  yield takeLatest(FETCH_USERS_REQUEST, fetchUsersSaga);
+
+  yield takeLatest(FETCH_COMMENTS_REQUEST, fetchCommentsSaga);
 }
 
 export default rootSaga;

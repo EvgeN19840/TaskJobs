@@ -22,7 +22,7 @@ function* fetchUsersSaga(): Generator {
       axios.get,
       'https://jsonplaceholder.typicode.com/posts'
     );
-    console.log('Response:', response); // Log the response
+    console.log('Post', response); 
     const typedResponse = response as PartialFetchUsersResponse;
     yield put(fetchUsersSuccess(typedResponse.data as User[]));
   } catch (error: any) {

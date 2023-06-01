@@ -1,4 +1,3 @@
-
 import { combineReducers, Reducer } from 'redux';
 import {
   FETCH_USERS_REQUEST,
@@ -24,10 +23,7 @@ const initialUserState: UserState = {
   error: null,
 };
 
-const userReducer: Reducer<UserState, UserActionTypes> = (
-  state = initialUserState,
-  action
-) => {
+const userReducer: Reducer<UserState, UserActionTypes> = (state = initialUserState, action) => {
   switch (action.type) {
     case FETCH_USERS_REQUEST:
       return {
