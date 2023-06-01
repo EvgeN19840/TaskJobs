@@ -1,10 +1,17 @@
+import routelistPosts from "./routes";
+
+// ListPostsPage.tsx
+
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { fetchUsersRequest, fetchCommentsRequest } from "../../../redux/actions";
-import routelistPosts from "./routes";
+import {
+  fetchUsersRequest,
+  fetchCommentsRequest,
+} from "../../../redux/actions";
+
 import { User, Comment } from "../../../redux/types";
 
-import "./styles.css"
+import "./styles.css";
 
 interface Props {
   users: User[];
@@ -13,6 +20,10 @@ interface Props {
   fetchUsers: () => void;
   fetchComments: (postId: number) => void;
 }
+
+// ListPostsPage.tsx
+
+// ... импорт и другой код ...
 
 const ListPostsPage = ({
   users,
@@ -26,21 +37,33 @@ const ListPostsPage = ({
   }, [fetchUsers]);
 
   const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
-  const [comments, setComments] = useState<Comment[]>([]);
+  const [commentsVisible, setCommentsVisible] = useState<boolean>(false);
+  const [initialLoad, setInitialLoad] = useState<boolean>(true);
 
   const handleSelectComment = (postId: number) => {
-    setSelectedPostId(postId);
-    fetchComments(postId);
-  };
-
-  useEffect(() => {
-    if (selectedPostId !== null) {
-      const selectedPost = users.find((user) => user.id === selectedPostId);
-      if (selectedPost) {
-        setComments(selectedPost.comments);
+    if (selectedPostId === postId) {
+      setSelectedPostId(null);
+      setCommentsVisible(false);
+    } else {
+      setSelectedPostId(postId);
+      setCommentsVisible(true);
+      if (!initialLoad) {
+        fetchComments(postId);
+      } else {
+        setInitialLoad(false);
       }
     }
-  }, [selectedPostId, users]);
+  };
+
+  const getCommentsForPost = (postId: number) => {
+    const selectedUser = users.find((user) => user.id === postId);
+    if (selectedUser) {
+      return selectedUser.comments;
+    }
+    return [];
+  };
+
+  const comments = selectedPostId ? getCommentsForPost(selectedPostId) : [];
 
   if (loading) {
     return <div>Loading...</div>;
@@ -61,23 +84,27 @@ const ListPostsPage = ({
         {users.map((user) => (
           <li key={user.id}>
             <h2 className="title">Title: {user.title}</h2>
-            <h3 className="title">Post: {user.body}</h3>
+            <h3 className="body">Post: {user.body}</h3>
             <button
               className="button-comment"
               onClick={() => handleSelectComment(user.id)}
             >
               Comment
             </button>
-            {selectedPostId === user.id && (
+            {selectedPostId === user.id && commentsVisible && (
               <>
                 {comments && comments.length > 0 ? (
                   <ul>
                     {comments.map((comment) => (
-                      <li key={comment.id}>{comment.body}</li>
+                      <li key={comment.id}>
+                        Email: {comment.email}
+                        <br />
+                        Comment: {comment.body}
+                      </li>
                     ))}
                   </ul>
                 ) : (
-                  <p>No comments for this post.</p>
+                  <p className="no-comments">No comments for this post.</p>
                 )}
               </>
             )}
