@@ -33,25 +33,27 @@ const Header = () => {
             </div>
           )}
           <div className="nav-container">
-            <ul className="navbar-link">
-              <NavLink
-                className="navbar-link-button"
-                to={routelistPostsPage()}
-                activeClassName={"linkActive"}
-                onClick={toggleActive}
-              >
-                Список постов
-              </NavLink>
+            {isActive && (
+              <ul className="navbar-link">
+                <NavLink
+                  className="navbar-link-button"
+                  to={routelistPostsPage()}
+                  activeClassName={"linkActive"}
+                  onClick={toggleActive}
+                >
+                  Список постов
+                </NavLink>
 
-              <NavLink
-                className="navbar-link-button"
-                to={routecontactPage()}
-                activeClassName={"linkActive"}
-                onClick={toggleActive}
-              >
-                Обо мне
-              </NavLink>
-            </ul>
+                <NavLink
+                  className="navbar-link-button"
+                  to={routecontactPage()}
+                  activeClassName={"linkActive"}
+                  onClick={toggleActive}
+                >
+                  Обо мне
+                </NavLink>
+              </ul>
+            )}
           </div>
         </nav>
         <div
